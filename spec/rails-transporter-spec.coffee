@@ -180,7 +180,7 @@ describe "RailsTransporter", ->
     describe "when active editor opens model", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'model', 'blog.rb'))
 
       describe "when the sinatra-transporter:open-view-finder event is triggered", ->
         # it "shows the ViewFinder or hides it if it's already showing", ->
@@ -219,7 +219,7 @@ describe "RailsTransporter", ->
     describe "when active editor opens model and cursor is on include method", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'model', 'blog.rb'))
 
       it "opens model concern", ->
         editor = atom.workspace.getActiveTextEditor()
@@ -232,7 +232,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          concernPath = path.join(atom.project.getPaths()[0], 'lib', 'models', 'concerns', 'searchable.rb')
+          concernPath = path.join(atom.project.getPaths()[0], 'lib', 'model', 'concerns', 'searchable.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe concernPath
@@ -252,7 +252,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'model', 'blog.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -272,7 +272,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'model', 'blog.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -282,7 +282,7 @@ describe "RailsTransporter", ->
    describe "when active editor opens model test", ->
      beforeEach ->
        waitsForPromise ->
-         atom.workspace.open(path.join(atom.project.getPaths()[0], 'test', 'models', 'blog_test.rb'))
+         atom.workspace.open(path.join(atom.project.getPaths()[0], 'test', 'model', 'blog_test.rb'))
 
      it "opens related model", ->
        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-model'
@@ -293,7 +293,7 @@ describe "RailsTransporter", ->
          atom.workspace.getActivePane().getItems().length == 2
 
        runs ->
-         modelPath = path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb')
+         modelPath = path.join(atom.project.getPaths()[0], 'lib', 'model', 'blog.rb')
          editor = atom.workspace.getActiveTextEditor()
          editor.setCursorBufferPosition new Point(0, 0)
          expect(editor.getPath()).toBe modelPath
@@ -302,7 +302,7 @@ describe "RailsTransporter", ->
     describe "when active editor opens model spec", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'models', 'blog_spec.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'model', 'blog_spec.rb'))
 
       it "opens related model", ->
         atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-model'
@@ -313,7 +313,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'model', 'blog.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -333,7 +333,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'model', 'blog.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -354,7 +354,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'model', 'blog.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -424,7 +424,7 @@ describe "RailsTransporter", ->
     describe "when active editor opens model", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'model', 'blog.rb'))
 
       it "opens related helper", ->
         atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-helper'
@@ -699,7 +699,7 @@ describe "RailsTransporter", ->
     describe "when active editor opens model", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'model', 'blog.rb'))
 
       it "opens model spec", ->
         atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-spec'
@@ -709,7 +709,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          specPath = path.join(atom.project.getPaths()[0], 'spec', 'models', 'blog_spec.rb')
+          specPath = path.join(atom.project.getPaths()[0], 'spec', 'model', 'blog_spec.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(2, 0)
           expect(editor.getPath()).toBe specPath
@@ -728,7 +728,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          specPath = path.join(atom.project.getPaths()[0], 'spec', 'models', 'blog_spec.rb')
+          specPath = path.join(atom.project.getPaths()[0], 'spec', 'model', 'blog_spec.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(2, 0)
           expect(editor.getPath()).toBe specPath
@@ -814,7 +814,7 @@ describe "RailsTransporter", ->
     describe "when active editor opens model", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'model', 'blog.rb'))
 
       it "opens model test", ->
         atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-test'
@@ -824,7 +824,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          testPath = path.join(atom.project.getPaths()[0], 'test', 'models', 'blog_test.rb')
+          testPath = path.join(atom.project.getPaths()[0], 'test', 'model', 'blog_test.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(2, 0)
           expect(editor.getPath()).toBe testPath
@@ -1628,7 +1628,7 @@ describe "RailsTransporter", ->
       describe "open plural resource filename", ->
         beforeEach ->
           waitsForPromise ->
-            atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb'))
+            atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'model', 'blog.rb'))
 
         it "opens related factory", ->
           atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-factory'
@@ -1648,7 +1648,7 @@ describe "RailsTransporter", ->
       describe "open singular resource filename", ->
         beforeEach ->
           waitsForPromise ->
-            atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'models', 'entry.rb'))
+            atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'model', 'entry.rb'))
 
         it "opens related factory", ->
           atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-factory'
@@ -1670,7 +1670,7 @@ describe "RailsTransporter", ->
       describe "open plural resource filename", ->
         beforeEach ->
           waitsForPromise ->
-            atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'models', 'blog_spec.rb'))
+            atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'model', 'blog_spec.rb'))
 
         it "opens related factory", ->
           atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-factory'
@@ -1690,7 +1690,7 @@ describe "RailsTransporter", ->
       describe "open singular resource filename", ->
         beforeEach ->
           waitsForPromise ->
-            atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'models', 'entry_spec.rb'))
+            atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'model', 'entry_spec.rb'))
 
         it "opens related factory", ->
           atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-factory'

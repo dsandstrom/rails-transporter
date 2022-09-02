@@ -18,7 +18,7 @@ class ViewFinderView extends BaseFinderView
                            .replace(/_controller\.rb$/, '')
     else if @isModel(currentFile)
       basename = path.basename(currentFile, '.rb')
-      viewDir = currentFile.replace('models', 'views')
+      viewDir = currentFile.replace('model', 'views')
                            .replace(basename, pluralize(basename))
                            .replace(".rb", "")
     else if @isMailer(currentFile)

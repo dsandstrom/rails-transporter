@@ -48,7 +48,7 @@ class FileOpener
     @reloadCurrentEditor()
     if @isModel(@currentFile)
       resource = path.basename(@currentFile, '.rb')
-      targetFile = @currentFile.replace(path.join('lib', 'models'), path.join('lib', 'controller'))
+      targetFile = @currentFile.replace(path.join('lib', 'model'), path.join('lib', 'controller'))
                                .replace(///#{resource}\.rb$///, "#{pluralize(resource)}_controller.rb")
     else if @isView(@currentFile)
       targetFile = path.dirname(@currentFile)
@@ -81,44 +81,44 @@ class FileOpener
     if @isController(@currentFile)
       resourceName = pluralize.singular(@currentFile.match(/([\w]+)_controller\.rb$/)[1])
 
-      targetFile = path.join(atom.project.getPaths()[0], 'lib', 'models', "#{resourceName}.rb")
+      targetFile = path.join(atom.project.getPaths()[0], 'lib', 'model', "#{resourceName}.rb")
       unless fs.existsSync targetFile
-        targetFile = @currentFile.replace(path.join('lib', 'controller'), path.join('lib', 'models'))
+        targetFile = @currentFile.replace(path.join('lib', 'controller'), path.join('lib', 'model'))
                                  .replace(/([\w]+)_controller\.rb$/, "#{resourceName}.rb")
 
     else if @isHelper(@currentFile)
       resourceName = pluralize.singular(@currentFile.match(/([\w]+)_helper\.rb$/)[1])
 
-      targetFile = path.join(atom.project.getPaths()[0], 'lib', 'models', "#{resourceName}.rb")
+      targetFile = path.join(atom.project.getPaths()[0], 'lib', 'model', "#{resourceName}.rb")
       unless fs.existsSync targetFile
-        targetFile = @currentFile.replace(path.join('lib', 'helpers'), path.join('lib', 'models'))
+        targetFile = @currentFile.replace(path.join('lib', 'helpers'), path.join('lib', 'model'))
                                  .replace(/([\w]+)_helper\.rb$/, "#{resourceName}.rb")
 
     else if @isView(@currentFile)
       dir = path.dirname(@currentFile)
       resource = path.basename(dir)
 
-      targetFile = path.join(atom.project.getPaths()[0], 'lib', 'models', "#{resource}.rb")
+      targetFile = path.join(atom.project.getPaths()[0], 'lib', 'model', "#{resource}.rb")
       unless fs.existsSync targetFile
-        targetFile = dir.replace(path.join('lib', 'views'), path.join('lib', 'models'))
+        targetFile = dir.replace(path.join('lib', 'views'), path.join('lib', 'model'))
                         .replace(///#{resource}\/*\.*$///, "#{pluralize.singular(resource)}.rb")
 
     else if @isTest(@currentFile)
-      targetFile = @currentFile.replace(path.join('test', 'models'), path.join('lib', 'models'))
+      targetFile = @currentFile.replace(path.join('test', 'model'), path.join('lib', 'model'))
                                .replace(/_test\.rb$/, '.rb')
 
     else if @isSpec(@currentFile)
-      targetFile = @currentFile.replace(path.join('spec', 'models'), path.join('lib', 'models'))
+      targetFile = @currentFile.replace(path.join('spec', 'model'), path.join('lib', 'model'))
                                .replace(/_spec\.rb$/, '.rb')
 
     else if @isFactory(@currentFile)
       dir = path.basename(@currentFile, '.rb')
       resource = path.basename(dir)
-      targetFile = @currentFile.replace(path.join('spec', 'factories'), path.join('lib', 'models'))
+      targetFile = @currentFile.replace(path.join('spec', 'factories'), path.join('lib', 'model'))
                                .replace(///#{resource}\.rb$///, "#{pluralize.singular(resource)}.rb")
 
     else if @isModel(@currentFile) and @currentBufferLine.indexOf("include") isnt -1
-      concernsDir = path.join(atom.project.getPaths()[0], 'lib', 'models', 'concerns')
+      concernsDir = path.join(atom.project.getPaths()[0], 'lib', 'model', 'concerns')
       targetFile = @concernPath(concernsDir, @currentBufferLine)
 
     if fs.existsSync targetFile
@@ -139,7 +139,7 @@ class FileOpener
                                .replace(/_spec\.rb/, '.rb')
     else if @isModel(@currentFile)
       resource = path.basename(@currentFile, '.rb')
-      targetFile = @currentFile.replace(path.join('lib', 'models'), path.join('lib', 'helpers'))
+      targetFile = @currentFile.replace(path.join('lib', 'model'), path.join('lib', 'helpers'))
                                .replace(///#{resource}\.rb$///, "#{pluralize(resource)}_helper.rb")
     else if @isView(@currentFile)
       targetFile = path.dirname(@currentFile)
@@ -159,11 +159,11 @@ class FileOpener
       targetFile = @currentFile.replace(path.join('lib', 'helpers'), path.join('test', 'helpers'))
                                .replace(/\.rb$/, '_test.rb')
     else if @isModel(@currentFile)
-      targetFile = @currentFile.replace(path.join('lib', 'models'), path.join('test', 'models'))
+      targetFile = @currentFile.replace(path.join('lib', 'model'), path.join('test', 'model'))
                                .replace(/\.rb$/, '_test.rb')
     else if @isFactory(@currentFile)
       resource = path.basename(@currentFile.replace(/_test\.rb/, '.rb'), '.rb')
-      targetFile = @currentFile.replace(path.join('test', 'factories'), path.join('test', 'models'))
+      targetFile = @currentFile.replace(path.join('test', 'factories'), path.join('test', 'model'))
                                .replace("#{resource}.rb", "#{pluralize.singular(resource)}_test.rb")
     else if @isService(@currentFile)
       [project_path, file_path] = atom.project.relativizePath(@currentFile)
@@ -194,12 +194,12 @@ class FileOpener
                                .replace(/\.rb$/, '_spec.rb')
 
     else if @isModel(@currentFile)
-      targetFile = @currentFile.replace(path.join('lib', 'models'), path.join('spec', 'models'))
+      targetFile = @currentFile.replace(path.join('lib', 'model'), path.join('spec', 'model'))
                                .replace(/\.rb$/, '_spec.rb')
 
     else if @isFactory(@currentFile)
       resource = path.basename(@currentFile.replace(/_spec\.rb/, '.rb'), '.rb')
-      targetFile = @currentFile.replace(path.join('spec', 'factories'), path.join('spec', 'models'))
+      targetFile = @currentFile.replace(path.join('spec', 'factories'), path.join('spec', 'model'))
                                .replace("#{resource}.rb", "#{pluralize.singular(resource)}_spec.rb")
 
     else if @isService(@currentFile)
@@ -291,10 +291,10 @@ class FileOpener
     @reloadCurrentEditor()
     if @isModel(@currentFile)
       resource = path.basename(@currentFile, '.rb')
-      fileBase = path.dirname(@currentFile.replace(path.join('lib', 'models'), path.join('spec', 'factories')))
+      fileBase = path.dirname(@currentFile.replace(path.join('lib', 'model'), path.join('spec', 'factories')))
     else if @isSpec(@currentFile)
       resource = path.basename(@currentFile.replace(/_spec\.rb/, '.rb'), '.rb')
-      fileBase = path.dirname(@currentFile.replace(path.join('spec', 'models'), path.join('spec', 'factories')))
+      fileBase = path.dirname(@currentFile.replace(path.join('spec', 'model'), path.join('spec', 'factories')))
 
     if fileBase?
       for fileName in ["#{resource}.rb", "#{pluralize(resource)}.rb"]

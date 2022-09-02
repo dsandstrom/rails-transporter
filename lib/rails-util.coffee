@@ -28,7 +28,7 @@ class RailsUtil
 
   isModel: (filePath) ->
     filePath? and
-    atom.project.relativize(filePath).indexOf(path.join('lib', 'models')) isnt -1 and
+    atom.project.relativize(filePath).indexOf(path.join('lib', 'model')) isnt -1 and
     filePath.search(/\.rb$/) isnt -1
 
   isAsset: (filePath) ->
