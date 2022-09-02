@@ -1,6 +1,6 @@
 {
   "name": "sinatra-transporter",
-  "main": "./lib/rails-transporter",
+  "main": "./lib/sinatra-transporter",
   "version": "0.1.0",
   "description": "Open related Sinatra files depending on current context",
   "keywords": [
@@ -25,7 +25,7 @@
       "sinatra-transporter:open-factory"
     ]
   },
-  "repository": "https://github.com/hmatsuda/rails-transporter",
+  "repository": "https://github.com/dsandstrom/sinatra-transporter",
   "license": "MIT",
   "engines": {
     "atom": ">=0.174.0 <2.0.0"
