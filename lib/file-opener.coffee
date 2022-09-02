@@ -13,7 +13,7 @@ class FileOpener
   _.extend this::, RailsUtil::
 
   openView: ->
-    configExtensions = atom.config.get('rails-transporter.viewFileExtension')
+    configExtensions = atom.config.get('sinatra-transporter.viewFileExtension')
     @reloadCurrentEditor()
 
     for rowNumber in [@cusorPos.row..0]
@@ -22,10 +22,10 @@ class FileOpener
       if result?[1]?
 
         if @isController(@currentFile)
-          fileBase = @currentFile.replace(path.join('app', 'controllers'), path.join('app', 'views'))
+          fileBase = @currentFile.replace(path.join('lib', 'controller'), path.join('lib', 'views'))
                                  .replace(/_controller\.rb$/, "#{path.sep}#{result[1]}")
         else if @isMailer(@currentFile)
-          fileBase = @currentFile.replace(path.join('app', 'mailers'), path.join('app', 'views'))
+          fileBase = @currentFile.replace(path.join('lib', 'mailers'), path.join('lib', 'views'))
                                  .replace(/\.rb$/, "#{path.sep}#{result[1]}")
 
         for extension in configExtensions
@@ -48,26 +48,26 @@ class FileOpener
     @reloadCurrentEditor()
     if @isModel(@currentFile)
       resource = path.basename(@currentFile, '.rb')
-      targetFile = @currentFile.replace(path.join('app', 'models'), path.join('app', 'controllers'))
+      targetFile = @currentFile.replace(path.join('lib', 'models'), path.join('lib', 'controller'))
                                .replace(///#{resource}\.rb$///, "#{pluralize(resource)}_controller.rb")
     else if @isView(@currentFile)
       targetFile = path.dirname(@currentFile)
-                   .replace(path.join('app', 'views'), path.join('app', 'controllers')) + '_controller.rb'
+                   .replace(path.join('lib', 'views'), path.join('lib', 'controller')) + '_controller.rb'
     else if @isHelper(@currentFile)
-      targetFile = @currentFile.replace(path.join('app', 'helpers'), path.join('app', 'controllers'))
+      targetFile = @currentFile.replace(path.join('lib', 'helpers'), path.join('lib', 'controller'))
                                .replace(/_helper\.rb$/, '_controller.rb')
     else if @isTest(@currentFile)
-      targetFile = @currentFile.replace(path.join('test', 'controllers'), path.join('app', 'controllers'))
+      targetFile = @currentFile.replace(path.join('test', 'controller'), path.join('lib', 'controller'))
                                .replace(/_test\.rb$/, '.rb')
     else if @isSpec(@currentFile)
       if @currentFile.indexOf('spec/requests') isnt -1
-        targetFile = @currentFile.replace(path.join('spec', 'requests'), path.join('app', 'controllers'))
+        targetFile = @currentFile.replace(path.join('spec', 'requests'), path.join('lib', 'controller'))
                                  .replace(/_spec\.rb$/, '_controller.rb')
       else
-        targetFile = @currentFile.replace(path.join('spec', 'controllers'), path.join('app', 'controllers'))
+        targetFile = @currentFile.replace(path.join('spec', 'controller'), path.join('lib', 'controller'))
                                  .replace(/_spec\.rb$/, '.rb')
     else if @isController(@currentFile) and @currentBufferLine.indexOf("include") isnt -1
-      concernsDir = path.join(atom.project.getPaths()[0], 'app', 'controllers', 'concerns')
+      concernsDir = path.join(atom.project.getPaths()[0], 'lib', 'controller', 'concerns')
       targetFile = @concernPath(concernsDir, @currentBufferLine)
 
     if fs.existsSync targetFile
@@ -81,44 +81,44 @@ class FileOpener
     if @isController(@currentFile)
       resourceName = pluralize.singular(@currentFile.match(/([\w]+)_controller\.rb$/)[1])
 
-      targetFile = path.join(atom.project.getPaths()[0], 'app', 'models', "#{resourceName}.rb")
+      targetFile = path.join(atom.project.getPaths()[0], 'lib', 'models', "#{resourceName}.rb")
       unless fs.existsSync targetFile
-        targetFile = @currentFile.replace(path.join('app', 'controllers'), path.join('app', 'models'))
+        targetFile = @currentFile.replace(path.join('lib', 'controller'), path.join('lib', 'models'))
                                  .replace(/([\w]+)_controller\.rb$/, "#{resourceName}.rb")
 
     else if @isHelper(@currentFile)
       resourceName = pluralize.singular(@currentFile.match(/([\w]+)_helper\.rb$/)[1])
 
-      targetFile = path.join(atom.project.getPaths()[0], 'app', 'models', "#{resourceName}.rb")
+      targetFile = path.join(atom.project.getPaths()[0], 'lib', 'models', "#{resourceName}.rb")
       unless fs.existsSync targetFile
-        targetFile = @currentFile.replace(path.join('app', 'helpers'), path.join('app', 'models'))
+        targetFile = @currentFile.replace(path.join('lib', 'helpers'), path.join('lib', 'models'))
                                  .replace(/([\w]+)_helper\.rb$/, "#{resourceName}.rb")
 
     else if @isView(@currentFile)
       dir = path.dirname(@currentFile)
       resource = path.basename(dir)
 
-      targetFile = path.join(atom.project.getPaths()[0], 'app', 'models', "#{resource}.rb")
+      targetFile = path.join(atom.project.getPaths()[0], 'lib', 'models', "#{resource}.rb")
       unless fs.existsSync targetFile
-        targetFile = dir.replace(path.join('app', 'views'), path.join('app', 'models'))
+        targetFile = dir.replace(path.join('lib', 'views'), path.join('lib', 'models'))
                         .replace(///#{resource}\/*\.*$///, "#{pluralize.singular(resource)}.rb")
 
     else if @isTest(@currentFile)
-      targetFile = @currentFile.replace(path.join('test', 'models'), path.join('app', 'models'))
+      targetFile = @currentFile.replace(path.join('test', 'models'), path.join('lib', 'models'))
                                .replace(/_test\.rb$/, '.rb')
 
     else if @isSpec(@currentFile)
-      targetFile = @currentFile.replace(path.join('spec', 'models'), path.join('app', 'models'))
+      targetFile = @currentFile.replace(path.join('spec', 'models'), path.join('lib', 'models'))
                                .replace(/_spec\.rb$/, '.rb')
 
     else if @isFactory(@currentFile)
       dir = path.basename(@currentFile, '.rb')
       resource = path.basename(dir)
-      targetFile = @currentFile.replace(path.join('spec', 'factories'), path.join('app', 'models'))
+      targetFile = @currentFile.replace(path.join('spec', 'factories'), path.join('lib', 'models'))
                                .replace(///#{resource}\.rb$///, "#{pluralize.singular(resource)}.rb")
 
     else if @isModel(@currentFile) and @currentBufferLine.indexOf("include") isnt -1
-      concernsDir = path.join(atom.project.getPaths()[0], 'app', 'models', 'concerns')
+      concernsDir = path.join(atom.project.getPaths()[0], 'lib', 'models', 'concerns')
       targetFile = @concernPath(concernsDir, @currentBufferLine)
 
     if fs.existsSync targetFile
@@ -129,21 +129,21 @@ class FileOpener
   openHelper: ->
     @reloadCurrentEditor()
     if @isController(@currentFile)
-      targetFile = @currentFile.replace(path.join('app', 'controllers'), path.join('app', 'helpers'))
+      targetFile = @currentFile.replace(path.join('lib', 'controller'), path.join('lib', 'helpers'))
                                .replace(/controller\.rb/, 'helper.rb')
     else if @isTest(@currentFile)
-      targetFile = @currentFile.replace(path.join('test', 'helpers'), path.join('app', 'helpers'))
+      targetFile = @currentFile.replace(path.join('test', 'helpers'), path.join('lib', 'helpers'))
                                .replace(/_test\.rb/, '.rb')
     else if @isSpec(@currentFile)
-      targetFile = @currentFile.replace(path.join('spec', 'helpers'), path.join('app', 'helpers'))
+      targetFile = @currentFile.replace(path.join('spec', 'helpers'), path.join('lib', 'helpers'))
                                .replace(/_spec\.rb/, '.rb')
     else if @isModel(@currentFile)
       resource = path.basename(@currentFile, '.rb')
-      targetFile = @currentFile.replace(path.join('app', 'models'), path.join('app', 'helpers'))
+      targetFile = @currentFile.replace(path.join('lib', 'models'), path.join('lib', 'helpers'))
                                .replace(///#{resource}\.rb$///, "#{pluralize(resource)}_helper.rb")
     else if @isView(@currentFile)
       targetFile = path.dirname(@currentFile)
-                       .replace(path.join('app', 'views'), path.join('app', 'helpers')) + "_helper.rb"
+                       .replace(path.join('lib', 'views'), path.join('lib', 'helpers')) + "_helper.rb"
 
     if fs.existsSync targetFile
       @open(targetFile)
@@ -153,13 +153,13 @@ class FileOpener
   openTest: ->
     @reloadCurrentEditor()
     if @isController(@currentFile)
-      targetFile = @currentFile.replace(path.join('app', 'controllers'), path.join('test', 'controllers'))
+      targetFile = @currentFile.replace(path.join('lib', 'controller'), path.join('test', 'controller'))
                                .replace(/controller\.rb$/, 'controller_test.rb')
     else if @isHelper(@currentFile)
-      targetFile = @currentFile.replace(path.join('app', 'helpers'), path.join('test', 'helpers'))
+      targetFile = @currentFile.replace(path.join('lib', 'helpers'), path.join('test', 'helpers'))
                                .replace(/\.rb$/, '_test.rb')
     else if @isModel(@currentFile)
-      targetFile = @currentFile.replace(path.join('app', 'models'), path.join('test', 'models'))
+      targetFile = @currentFile.replace(path.join('lib', 'models'), path.join('test', 'models'))
                                .replace(/\.rb$/, '_test.rb')
     else if @isFactory(@currentFile)
       resource = path.basename(@currentFile.replace(/_test\.rb/, '.rb'), '.rb')
@@ -167,7 +167,7 @@ class FileOpener
                                .replace("#{resource}.rb", "#{pluralize.singular(resource)}_test.rb")
     else if @isService(@currentFile)
       [project_path, file_path] = atom.project.relativizePath(@currentFile)
-      targetFile = path.join(project_path, file_path.replace(RegExp(path.join('app', '(\\w+)')), path.join('test', '$1'))
+      targetFile = path.join(project_path, file_path.replace(RegExp(path.join('lib', '(\\w+)')), path.join('test', '$1'))
                                .replace(/\.rb$/, '_test.rb'))
 
     if fs.existsSync targetFile
@@ -178,23 +178,23 @@ class FileOpener
   openSpec: ->
     @reloadCurrentEditor()
     if @isController(@currentFile)
-      controllerSpecType = atom.config.get('rails-transporter.controllerSpecType')
-      if controllerSpecType is 'controllers'
-        targetFile = @currentFile.replace(path.join('app', 'controllers'), path.join('spec', 'controllers'))
+      controllerSpecType = atom.config.get('sinatra-transporter.controllerSpecType')
+      if controllerSpecType is 'controller'
+        targetFile = @currentFile.replace(path.join('lib', 'controller'), path.join('spec', 'controller'))
                                  .replace(/controller\.rb$/, 'controller_spec.rb')
       else if controllerSpecType is 'requests'
-        targetFile = @currentFile.replace(path.join('app', 'controllers'), path.join('spec', 'requests'))
+        targetFile = @currentFile.replace(path.join('lib', 'controller'), path.join('spec', 'requests'))
                                  .replace(/controller\.rb$/, 'spec.rb')
       else if controllerSpecType is 'features'
-        targetFile = @currentFile.replace(path.join('app', 'controllers'), path.join('spec', 'features'))
+        targetFile = @currentFile.replace(path.join('lib', 'controller'), path.join('spec', 'features'))
                                  .replace(/controller\.rb$/, 'spec.rb')
 
     else if @isHelper(@currentFile)
-      targetFile = @currentFile.replace(path.join('app', 'helpers'), path.join('spec', 'helpers'))
+      targetFile = @currentFile.replace(path.join('lib', 'helpers'), path.join('spec', 'helpers'))
                                .replace(/\.rb$/, '_spec.rb')
 
     else if @isModel(@currentFile)
-      targetFile = @currentFile.replace(path.join('app', 'models'), path.join('spec', 'models'))
+      targetFile = @currentFile.replace(path.join('lib', 'models'), path.join('spec', 'models'))
                                .replace(/\.rb$/, '_spec.rb')
 
     else if @isFactory(@currentFile)
@@ -204,7 +204,7 @@ class FileOpener
 
     else if @isService(@currentFile)
       [project_path, file_path] = atom.project.relativizePath(@currentFile)
-      targetFile = path.join(project_path, file_path.replace(RegExp(path.join('app', '(\\w+)')), path.join('spec', '$1'))
+      targetFile = path.join(project_path, file_path.replace(RegExp(path.join('lib', '(\\w+)')), path.join('spec', '$1'))
                                .replace(/\.rb$/, '_spec.rb'))
 
     if fs.existsSync targetFile
@@ -241,9 +241,9 @@ class FileOpener
     else if @isAsset(@currentFile)
       if @currentBufferLine.indexOf("require ") isnt -1
         result = @currentBufferLine.match(/require\s*(.+?)\s*$/)
-        if @currentFile.indexOf(path.join('app', 'assets', 'javascripts')) isnt -1
+        if @currentFile.indexOf(path.join('lib', 'assets', 'javascripts')) isnt -1
           targetFile = @assetFullPath(result[1], 'javascripts') if result?[1]?
-        else if @currentFile.indexOf(path.join('app', 'assets', 'stylesheets')) isnt -1
+        else if @currentFile.indexOf(path.join('lib', 'assets', 'stylesheets')) isnt -1
           targetFile = @assetFullPath(result[1], 'stylesheets') if result?[1]?
       else if @currentBufferLine.indexOf("require_tree ") isnt -1
         return @createAssetFinderView().toggle()
@@ -253,9 +253,9 @@ class FileOpener
     @open(targetFile)
 
   openLayout: ->
-    configExtensions = atom.config.get('rails-transporter.viewFileExtension')
+    configExtensions = atom.config.get('sinatra-transporter.viewFileExtension')
     @reloadCurrentEditor()
-    layoutDir = path.join(atom.project.getPaths()[0], 'app', 'views', 'layouts')
+    layoutDir = path.join(atom.project.getPaths()[0], 'lib', 'views', 'layouts')
     if @isController(@currentFile)
       if @currentBufferLine.indexOf("layout") isnt -1
         result = @currentBufferLine.match(/layout\s*\(?\s*["'](.+?)["']/)
@@ -268,7 +268,7 @@ class FileOpener
               break
 
       else
-        fileBase = @currentFile.replace(path.join('app', 'controllers'), path.join('app', 'views', 'layouts'))
+        fileBase = @currentFile.replace(path.join('lib', 'controller'), path.join('lib', 'views', 'layouts'))
                                .replace('_controller.rb', '')
         for extension in configExtensions
           if fs.existsSync "#{fileBase}.#{extension}"
@@ -291,7 +291,7 @@ class FileOpener
     @reloadCurrentEditor()
     if @isModel(@currentFile)
       resource = path.basename(@currentFile, '.rb')
-      fileBase = path.dirname(@currentFile.replace(path.join('app', 'models'), path.join('spec', 'factories')))
+      fileBase = path.dirname(@currentFile.replace(path.join('lib', 'models'), path.join('spec', 'factories')))
     else if @isSpec(@currentFile)
       resource = path.basename(@currentFile.replace(/_spec\.rb/, '.rb'), '.rb')
       fileBase = path.dirname(@currentFile.replace(path.join('spec', 'models'), path.join('spec', 'factories')))
@@ -336,7 +336,7 @@ class FileOpener
     @dialogView.focusTextField()
 
   partialFullPath: (currentFile, partialName) ->
-    configExtensions = atom.config.get('rails-transporter.viewFileExtension')
+    configExtensions = atom.config.get('sinatra-transporter.viewFileExtension')
 
     if partialName.indexOf("/") is -1
       fileBase = path.join(path.dirname(currentFile), "_#{partialName}")
@@ -347,7 +347,7 @@ class FileOpener
 
       targetFile = "#{fileBase}.#{configExtensions[0]}" unless targetFile?
     else
-      fileBase = path.join(atom.project.getPaths()[0], 'app', 'views', path.dirname(partialName), "_#{path.basename(partialName)}")
+      fileBase = path.join(atom.project.getPaths()[0], 'lib', 'views', path.dirname(partialName), "_#{path.basename(partialName)}")
       for extension in configExtensions
         if fs.existsSync "#{fileBase}.#{extension}"
           targetFile = "#{fileBase}.#{extension}"
@@ -369,7 +369,7 @@ class FileOpener
     if assetName.match(/^\//)
       path.join(atom.project.getPaths()[0], 'public', path.dirname(assetName), "#{fileName}#{ext}")
     else
-      for location in ['app', 'lib', 'vendor']
+      for location in ['lib', 'lib', 'vendor']
         baseName = path.join(atom.project.getPaths()[0], location, 'assets', type, path.dirname(assetName), fileName)
         if type is 'javascripts'
           for fullExt in ["#{ext}.erb", "#{ext}.coffee", "#{ext}.coffee.erb", ext]

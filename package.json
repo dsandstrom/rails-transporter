@@ -1,29 +1,28 @@
 {
-  "name": "rails-transporter",
+  "name": "sinatra-transporter",
   "main": "./lib/rails-transporter",
-  "version": "1.7.1",
-  "description": "Open related Rails files depending on current context",
+  "version": "0.1.0",
+  "description": "Open related Sinatra files depending on current context",
   "keywords": [
-    "rails",
-    "ruby on rails",
+    "sinatra",
     "ruby",
     "rspec",
     "minitest"
   ],
   "activationCommands": {
     "atom-workspace": [
-      "rails-transporter:open-controller",
-      "rails-transporter:open-view-finder",
-      "rails-transporter:open-layout",
-      "rails-transporter:open-model",
-      "rails-transporter:open-helper",
-      "rails-transporter:open-test",
-      "rails-transporter:open-spec",
-      "rails-transporter:open-partial-template",
-      "rails-transporter:open-asset",
-      "rails-transporter:open-migration-finder",
-      "rails-transporter:open-view",
-      "rails-transporter:open-factory"
+      "sinatra-transporter:open-controller",
+      "sinatra-transporter:open-view-finder",
+      "sinatra-transporter:open-layout",
+      "sinatra-transporter:open-model",
+      "sinatra-transporter:open-helper",
+      "sinatra-transporter:open-test",
+      "sinatra-transporter:open-spec",
+      "sinatra-transporter:open-partial-template",
+      "sinatra-transporter:open-asset",
+      "sinatra-transporter:open-migration-finder",
+      "sinatra-transporter:open-view",
+      "sinatra-transporter:open-factory"
     ]
   },
   "repository": "https://github.com/hmatsuda/rails-transporter",

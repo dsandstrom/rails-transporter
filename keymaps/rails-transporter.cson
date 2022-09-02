@@ -6,17 +6,17 @@
 # the root workspace element.
 
 # For more detailed documentation see
-# https://atom.io/docs/latest/advanced/keymaps
-'atom-workspace':
-  'ctrl-r c': 'rails-transporter:open-controller'
-  'ctrl-r v f': 'rails-transporter:open-view-finder'
-  'ctrl-r v': 'rails-transporter:open-view'
-  'ctrl-r l': 'rails-transporter:open-layout'
-  'ctrl-r m': 'rails-transporter:open-model'
-  'ctrl-r h': 'rails-transporter:open-helper'
-  'ctrl-r t': 'rails-transporter:open-test'
-  'ctrl-r s': 'rails-transporter:open-spec'
-  'ctrl-r p': 'rails-transporter:open-partial-template'
-  'ctrl-r a': 'rails-transporter:open-asset'
-  'ctrl-r d m': 'rails-transporter:open-migration-finder'
-  'ctrl-r f': 'rails-transporter:open-factory'
+# # https://atom.io/docs/latest/advanced/keymaps
+# 'atom-workspace':
+#   'ctrl-r c': 'sinatra-transporter:open-controller'
+#   'ctrl-r v f': 'sinatra-transporter:open-view-finder'
+#   'ctrl-r v': 'sinatra-transporter:open-view'
+#   'ctrl-r l': 'sinatra-transporter:open-layout'
+#   'ctrl-r m': 'sinatra-transporter:open-model'
+#   'ctrl-r h': 'sinatra-transporter:open-helper'
+#   'ctrl-r t': 'sinatra-transporter:open-test'
+#   'ctrl-r s': 'sinatra-transporter:open-spec'
+#   'ctrl-r p': 'sinatra-transporter:open-partial-template'
+#   'ctrl-r a': 'sinatra-transporter:open-asset'
+#   'ctrl-r d m': 'sinatra-transporter:open-migration-finder'
+#   'ctrl-r f': 'sinatra-transporter:open-factory'

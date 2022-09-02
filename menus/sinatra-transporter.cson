@@ -1,0 +1,21 @@
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Rails Transporter'
+      'submenu': [
+        { 'label': 'Open Controller', 'command': 'sinatra-transporter:open-controller' }
+        { 'label': 'Open View Finder', 'command': 'sinatra-transporter:open-view-finder' }
+        { 'label': 'Open Layout', 'command': 'sinatra-transporter:open-layout' }
+        { 'label': 'Open Model', 'command': 'sinatra-transporter:open-model' }
+        { 'label': 'Open Helper', 'command': 'sinatra-transporter:open-helper' }
+        { 'label': 'Open Test', 'command': 'sinatra-transporter:open-test' }
+        { 'label': 'Open Spec', 'command': 'sinatra-transporter:open-spec' }
+        { 'label': 'Open Partial Template', 'command': 'sinatra-transporter:open-partial-template' }
+        { 'label': 'Open Asset', 'command': 'sinatra-transporter:open-asset' }
+        { 'label': 'Open Migration Finder', 'command': 'sinatra-transporter:open-migration-finder' }
+        { 'label': 'Open Factory', 'command': 'sinatra-transporter:open-factory' }
+      ]
+    ]
+  }
+]

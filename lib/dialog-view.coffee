@@ -4,14 +4,14 @@
 module.exports =
 class DialogView extends View
   @content: ->
-    @div tabIndex: -1, class: 'padded rails-transporter', =>
+    @div tabIndex: -1, class: 'padded sinatra-transporter', =>
       @div class: "block", =>
         @label "No target file found. Enter the path for the file to open"
         @subview 'fileEditor', new TextEditorView(mini: true, placeholder: '/path/to/file')
 
   initialize: ->
     @subscriptions = new CompositeDisposable
-    
+
     @subscriptions.add atom.commands.add @fileEditor.element,
       'core:confirm': => @openFile()
       'core:cancel': => @panel?hide()
@@ -26,25 +26,25 @@ class DialogView extends View
   setPanel: (@panel) ->
     @subscriptions.add @panel.onDidChangeVisible (visible) =>
       if visible then @didShow() else @didHide()
-      
+
   didShow: ->
     # todo
 
   didHide: ->
     workspaceElement = atom.views.getView(atom.workspace)
     workspaceElement.focus()
-    
+
   openFile: ->
     atom.workspace.open(@fileEditor.getText())
     @panel?.hide()
-    
+
   setTargetFile: (path) =>
     if path?
       projectPath = atom.project.relativizePath(path)
     else
       currentFile = atom.workspace.getActiveTextEditor().getPath()
       projectPath = atom.project.relativizePath(currentFile)
-      
+
     @fileEditor.setText(projectPath[1])
 
   focusTextField: =>

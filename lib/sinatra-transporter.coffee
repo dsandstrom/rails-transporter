@@ -13,34 +13,34 @@ module.exports =
     controllerSpecType:
       type:        'string'
       description: 'This is the type of the controller spec. controllers, requests or features'
-      default:     'controllers'
-      enum:        ['controllers', 'requests', 'features', 'api', 'integration']
+      default:     'controller'
+      enum:        ['controller', 'requests', 'features', 'api', 'integration']
 
   activate: (state) ->
     atom.commands.add 'atom-workspace',
-      'rails-transporter:open-view-finder': =>
+      'sinatra-transporter:open-view-finder': =>
         @createViewFinderView().toggle()
-      'rails-transporter:open-migration-finder': =>
+      'sinatra-transporter:open-migration-finder': =>
         @createMigrationFinderView().toggle()
-      'rails-transporter:open-model': =>
+      'sinatra-transporter:open-model': =>
         @createFileOpener().openModel()
-      'rails-transporter:open-helper': =>
+      'sinatra-transporter:open-helper': =>
         @createFileOpener().openHelper()
-      'rails-transporter:open-partial-template': =>
+      'sinatra-transporter:open-partial-template': =>
         @createFileOpener().openPartial()
-      'rails-transporter:open-test': =>
+      'sinatra-transporter:open-test': =>
         @createFileOpener().openTest()
-      'rails-transporter:open-spec': =>
+      'sinatra-transporter:open-spec': =>
         @createFileOpener().openSpec()
-      'rails-transporter:open-asset': =>
+      'sinatra-transporter:open-asset': =>
         @createFileOpener().openAsset()
-      'rails-transporter:open-controller': =>
+      'sinatra-transporter:open-controller': =>
         @createFileOpener().openController()
-      'rails-transporter:open-layout': =>
+      'sinatra-transporter:open-layout': =>
         @createFileOpener().openLayout()
-      'rails-transporter:open-view': =>
+      'sinatra-transporter:open-view': =>
         @createFileOpener().openView()
-      'rails-transporter:open-factory': =>
+      'sinatra-transporter:open-factory': =>
         @createFileOpener().openFactory()
 
   deactivate: ->

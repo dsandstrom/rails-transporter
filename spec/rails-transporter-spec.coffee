@@ -20,13 +20,13 @@ describe "RailsTransporter", ->
     atom.project.setPaths([tempPath])
 
     workspaceElement = atom.views.getView(atom.workspace)
-    activationPromise = atom.packages.activatePackage('rails-transporter')
+    activationPromise = atom.packages.activatePackage('sinatra-transporter')
 
   describe "open-migration-finder behavior", ->
-    describe "when the rails-transporter:open-migration-finder event is triggered", ->
+    describe "when the sinatra-transporter:open-migration-finder event is triggered", ->
       # it "shows the MigrationFinder or hides it if it's already showing", ->
       #
-      #   atom.commands.dispatch workspaceElement, 'rails-transporter:open-migration-finder'
+      #   atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-migration-finder'
       #
       #   waitsForPromise ->
       #     activationPromise
@@ -35,7 +35,7 @@ describe "RailsTransporter", ->
       #     expect(workspaceElement.querySelector('.select-list')).toExist()
 
       it "shows all migration paths and selects the first", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-migration-finder'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-migration-finder'
 
         waitsForPromise ->
           activationPromise
@@ -54,12 +54,12 @@ describe "RailsTransporter", ->
       describe "open file", ->
         beforeEach ->
           waitsForPromise ->
-            atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'controllers', 'blogs_controller.rb'))
+            atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'controller', 'blogs_controller.rb'))
 
         it "opens related view", ->
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(9, 0)
-          atom.commands.dispatch workspaceElement, 'rails-transporter:open-view'
+          atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-view'
 
           # Waits until package is activated and active panes count is 2
           waitsFor ->
@@ -67,7 +67,7 @@ describe "RailsTransporter", ->
             atom.workspace.getActivePane().getItems().length == 2
 
           runs ->
-            viewPath = path.join(atom.project.getPaths()[0], 'app', 'views', 'blogs', 'index.html.erb')
+            viewPath = path.join(atom.project.getPaths()[0], 'lib', 'views', 'blogs', 'index.html.erb')
             editor = atom.workspace.getActiveTextEditor()
             expect(editor.getPath()).toBe viewPath
             expect(editor.getLastCursor().getCurrentBufferLine()).toMatch /^<h1>Listing blogs<\/h1>$/
@@ -75,13 +75,13 @@ describe "RailsTransporter", ->
       describe "open file for fallbacks", ->
         beforeEach ->
           waitsForPromise ->
-            atom.config.set('rails-transporter.viewFileExtension', ['json.jbuilder'])
-            atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'controllers', 'api', 'blogs_controller.rb'))
+            atom.config.set('sinatra-transporter.viewFileExtension', ['json.jbuilder'])
+            atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'controller', 'api', 'blogs_controller.rb'))
 
         it "opens related view", ->
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(4, 0)
-          atom.commands.dispatch workspaceElement, 'rails-transporter:open-view'
+          atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-view'
 
           # Waits until package is activated and active panes count is 2
           waitsFor ->
@@ -89,7 +89,7 @@ describe "RailsTransporter", ->
             atom.workspace.getActivePane().getItems().length == 2
 
           runs ->
-            viewPath = path.join(atom.project.getPaths()[0], 'app', 'views', 'api', 'blogs', 'index.json.jbuilder')
+            viewPath = path.join(atom.project.getPaths()[0], 'lib', 'views', 'api', 'blogs', 'index.json.jbuilder')
             editor = atom.workspace.getActiveTextEditor()
             expect(editor.getPath()).toBe viewPath
             expect(editor.getLastCursor().getCurrentBufferLine()).toMatch /^json.array!(@blogs) do |blog|$/
@@ -100,15 +100,15 @@ describe "RailsTransporter", ->
     describe "when active editor opens controller", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'controllers', 'blogs_controller.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'controller', 'blogs_controller.rb'))
 
-      describe "when the rails-transporter:open-view-finder event is triggered", ->
+      describe "when the sinatra-transporter:open-view-finder event is triggered", ->
         # it "shows the ViewFinder or hides it if it's already showing", ->
         #   expect(workspaceElement.querySelector('.select-list')).not.toExist()
         #
         #   # This is an activation event, triggering it will cause the package to be
         #   # activated.
-        #   atom.commands.dispatch workspaceElement, 'rails-transporter:open-view-finder'
+        #   atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-view-finder'
         #
         #   # Waits until package is activated
         #   waitsForPromise ->
@@ -116,18 +116,18 @@ describe "RailsTransporter", ->
         #
         #   runs ->
         #     expect(workspaceElement.querySelector('.select-list')).toExist()
-        #     atom.commands.dispatch workspaceElement, 'rails-transporter:open-view-finder'
+        #     atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-view-finder'
         #     expect(workspaceElement.querySelector('.select-list')).not.toExist()
 
         it "shows all relative view paths for the current controller and selects the first", ->
-          atom.commands.dispatch workspaceElement, 'rails-transporter:open-view-finder'
+          atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-view-finder'
 
           # Waits until package is activated
           waitsForPromise ->
             activationPromise
 
           runs ->
-            viewDir = path.join(atom.project.getPaths()[0], 'app', 'views', 'blogs')
+            viewDir = path.join(atom.project.getPaths()[0], 'lib', 'views', 'blogs')
             expect($(workspaceElement).find('.select-list li').length).toBe fs.readdirSync(viewDir).length
             for view in fs.readdirSync(viewDir)
               expect($(workspaceElement).find(".select-list .primary-line:contains(#{view})")).toExist()
@@ -135,20 +135,20 @@ describe "RailsTransporter", ->
 
             expect($(workspaceElement).find(".select-list li:first")).toHaveClass 'two-lines selected'
             # hide view-finder for next test
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-view-finder'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-view-finder'
 
     describe "when active editor opens mailer", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'mailers', 'notification_mailer.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'mailers', 'notification_mailer.rb'))
 
-      describe "when the rails-transporter:open-view-finder event is triggered", ->
+      describe "when the sinatra-transporter:open-view-finder event is triggered", ->
         # it "shows the ViewFinder or hides it if it's already showing", ->
         #   expect(workspaceElement.querySelector('.select-list')).not.toExist()
         #
         #   # This is an activation event, triggering it will cause the package to be
         #   # activated.
-        #   atom.commands.dispatch workspaceElement, 'rails-transporter:open-view-finder'
+        #   atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-view-finder'
         #
         #   # Waits until package is activated
         #   waitsForPromise ->
@@ -156,18 +156,18 @@ describe "RailsTransporter", ->
         #
         #   runs ->
         #     expect(workspaceElement.querySelector('.select-list')).toExist()
-        #     atom.commands.dispatch workspaceElement, 'rails-transporter:open-view-finder'
+        #     atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-view-finder'
         #     expect(workspaceElement.querySelector('.select-list')).not.toExist()
 
         # it "shows all relative view paths for the current controller and selects the first", ->
-        #   atom.commands.dispatch workspaceElement, 'rails-transporter:open-view-finder'
+        #   atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-view-finder'
         #
         #   # Waits until package is activated
         #   waitsForPromise ->
         #     activationPromise
         #
         #   runs ->
-        #     viewDir = path.join(atom.project.getPaths()[0], 'app', 'views', 'notification_mailer')
+        #     viewDir = path.join(atom.project.getPaths()[0], 'lib', 'views', 'notification_mailer')
         #     expect(workspaceElement.querySelectorAll('.select-list li').length).toBe fs.readdirSync(viewDir).length
         #     for view in fs.readdirSync(viewDir)
         #       expect($(workspaceElement).find(".select-list .primary-line:contains(#{view})")).toExist()
@@ -175,20 +175,20 @@ describe "RailsTransporter", ->
         #
         #     expect($(workspaceElement).find(".select-list li:first")).toHaveClass 'two-lines selected'
         #     # hide view-finder for next test
-        #     atom.commands.dispatch workspaceElement, 'rails-transporter:open-view-finder'
+        #     atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-view-finder'
 
     describe "when active editor opens model", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'models', 'blog.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb'))
 
-      describe "when the rails-transporter:open-view-finder event is triggered", ->
+      describe "when the sinatra-transporter:open-view-finder event is triggered", ->
         # it "shows the ViewFinder or hides it if it's already showing", ->
         #   expect(workspaceElement.querySelector('.select-list')).not.toExist()
         #
         #   # This is an activation event, triggering it will cause the package to be
         #   # activated.
-        #   atom.commands.dispatch workspaceElement, 'rails-transporter:open-view-finder'
+        #   atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-view-finder'
         #
         #   # Waits until package is activated
         #   waitsForPromise ->
@@ -196,18 +196,18 @@ describe "RailsTransporter", ->
         #
         #   runs ->
         #     expect(workspaceElement.querySelector('.select-list')).toExist()
-        #     atom.commands.dispatch workspaceElement, 'rails-transporter:open-view-finder'
+        #     atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-view-finder'
         #     expect(workspaceElement.querySelector('.select-list')).not.toExist()
 
         # it "shows all relative view paths for the current controller and selects the first", ->
-        #   atom.commands.dispatch workspaceElement, 'rails-transporter:open-view-finder'
+        #   atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-view-finder'
         #
         #   # Waits until package is activated
         #   waitsForPromise ->
         #     activationPromise
         #
         #   runs ->
-        #     viewDir = path.join(atom.project.getPaths()[0], 'app', 'views', 'blogs')
+        #     viewDir = path.join(atom.project.getPaths()[0], 'lib', 'views', 'blogs')
         #     expect($(workspaceElement).find('.select-list li').length).toBe fs.readdirSync(viewDir).length
         #     for view in fs.readdirSync(viewDir)
         #       expect($(workspaceElement).find(".select-list .primary-line:contains(#{view})")).toExist()
@@ -219,12 +219,12 @@ describe "RailsTransporter", ->
     describe "when active editor opens model and cursor is on include method", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'models', 'blog.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb'))
 
       it "opens model concern", ->
         editor = atom.workspace.getActiveTextEditor()
         editor.setCursorBufferPosition new Point(1, 0)
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-model'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-model'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -232,7 +232,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          concernPath = path.join(atom.project.getPaths()[0], 'app', 'models', 'concerns', 'searchable.rb')
+          concernPath = path.join(atom.project.getPaths()[0], 'lib', 'models', 'concerns', 'searchable.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe concernPath
@@ -241,10 +241,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens controller", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'controllers', 'blogs_controller.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'controller', 'blogs_controller.rb'))
 
       it "opens related model", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-model'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-model'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -252,7 +252,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'app', 'models', 'blog.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -261,10 +261,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens namespaced controller", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'controllers', 'admins', 'blogs_controller.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'controller', 'admins', 'blogs_controller.rb'))
 
       it "opens related model", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-model'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-model'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -272,7 +272,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'app', 'models', 'blog.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -285,7 +285,7 @@ describe "RailsTransporter", ->
          atom.workspace.open(path.join(atom.project.getPaths()[0], 'test', 'models', 'blog_test.rb'))
 
      it "opens related model", ->
-       atom.commands.dispatch workspaceElement, 'rails-transporter:open-model'
+       atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-model'
 
        # Waits until package is activated and active panes count is 2
        waitsFor ->
@@ -293,7 +293,7 @@ describe "RailsTransporter", ->
          atom.workspace.getActivePane().getItems().length == 2
 
        runs ->
-         modelPath = path.join(atom.project.getPaths()[0], 'app', 'models', 'blog.rb')
+         modelPath = path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb')
          editor = atom.workspace.getActiveTextEditor()
          editor.setCursorBufferPosition new Point(0, 0)
          expect(editor.getPath()).toBe modelPath
@@ -305,7 +305,7 @@ describe "RailsTransporter", ->
           atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'models', 'blog_spec.rb'))
 
       it "opens related model", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-model'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-model'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -313,7 +313,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'app', 'models', 'blog.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -325,7 +325,7 @@ describe "RailsTransporter", ->
           atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'factories', 'blogs.rb'))
 
       it "opens related model", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-model'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-model'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -333,7 +333,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'app', 'models', 'blog.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -343,10 +343,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens view", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'views', 'blogs', 'show.html.erb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'views', 'blogs', 'show.html.erb'))
 
       it "opens related model", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-model'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-model'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -354,7 +354,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'app', 'models', 'blog.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -364,10 +364,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens controller", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'controllers', 'blogs_controller.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'controller', 'blogs_controller.rb'))
 
       it "opens related helper", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-helper'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-helper'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -375,7 +375,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          helperPath = path.join(atom.project.getPaths()[0], 'app', 'helpers', 'blogs_helper.rb')
+          helperPath = path.join(atom.project.getPaths()[0], 'lib', 'helpers', 'blogs_helper.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe helperPath
@@ -387,7 +387,7 @@ describe "RailsTransporter", ->
           atom.workspace.open(path.join(atom.project.getPaths()[0], 'test', 'helpers', 'blogs_helper_test.rb'))
 
       it "opens related helper", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-helper'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-helper'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -395,7 +395,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          helperPath = path.join(atom.project.getPaths()[0], 'app', 'helpers', 'blogs_helper.rb')
+          helperPath = path.join(atom.project.getPaths()[0], 'lib', 'helpers', 'blogs_helper.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe helperPath
@@ -407,7 +407,7 @@ describe "RailsTransporter", ->
           atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'helpers', 'blogs_helper_spec.rb'))
 
       it "opens related helper", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-helper'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-helper'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -415,7 +415,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          helperPath = path.join(atom.project.getPaths()[0], 'app', 'helpers', 'blogs_helper.rb')
+          helperPath = path.join(atom.project.getPaths()[0], 'lib', 'helpers', 'blogs_helper.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe helperPath
@@ -424,10 +424,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens model", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'models', 'blog.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb'))
 
       it "opens related helper", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-helper'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-helper'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -435,7 +435,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          helperPath = path.join(atom.project.getPaths()[0], 'app', 'helpers', 'blogs_helper.rb')
+          helperPath = path.join(atom.project.getPaths()[0], 'lib', 'helpers', 'blogs_helper.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe helperPath
@@ -444,10 +444,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens view", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'views', 'blogs', 'show.html.erb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'views', 'blogs', 'show.html.erb'))
 
       it "opens related helper", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-helper'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-helper'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -455,7 +455,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          helperPath = path.join(atom.project.getPaths()[0], 'app', 'helpers', 'blogs_helper.rb')
+          helperPath = path.join(atom.project.getPaths()[0], 'lib', 'helpers', 'blogs_helper.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe helperPath
@@ -464,13 +464,13 @@ describe "RailsTransporter", ->
   describe "open-partial-template behavior", ->
     beforeEach ->
       waitsForPromise ->
-        atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'views', 'blogs', 'edit.html.erb'))
+        atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'views', 'blogs', 'edit.html.erb'))
 
     describe "when cursor's current buffer row contains render method", ->
       it "opens partial template", ->
         editor = atom.workspace.getActiveTextEditor()
         editor.setCursorBufferPosition new Point(2, 0)
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-partial-template'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-partial-template'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -478,7 +478,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          partialPath = path.join(atom.project.getPaths()[0], 'app', 'views', 'blogs', '_form.html.erb')
+          partialPath = path.join(atom.project.getPaths()[0], 'lib', 'views', 'blogs', '_form.html.erb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe partialPath
@@ -488,7 +488,7 @@ describe "RailsTransporter", ->
       it "opens partial template", ->
         editor = atom.workspace.getActiveTextEditor()
         editor.setCursorBufferPosition new Point(3, 0)
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-partial-template'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-partial-template'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -496,7 +496,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          partialPath = path.join(atom.project.getPaths()[0], 'app', 'views', 'blogs', '_form.html.erb')
+          partialPath = path.join(atom.project.getPaths()[0], 'lib', 'views', 'blogs', '_form.html.erb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe partialPath
@@ -506,7 +506,7 @@ describe "RailsTransporter", ->
       it "opens partial template", ->
         editor = atom.workspace.getActiveTextEditor()
         editor.setCursorBufferPosition new Point(4, 0)
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-partial-template'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-partial-template'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -514,7 +514,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          partialPath = path.join(atom.project.getPaths()[0], 'app', 'views', 'blogs', '_form.html.erb')
+          partialPath = path.join(atom.project.getPaths()[0], 'lib', 'views', 'blogs', '_form.html.erb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe partialPath
@@ -524,7 +524,7 @@ describe "RailsTransporter", ->
       it "opens shared partial template", ->
         editor = atom.workspace.getActiveTextEditor()
         editor.setCursorBufferPosition new Point(5, 0)
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-partial-template'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-partial-template'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -532,7 +532,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          partialPath = path.join(atom.project.getPaths()[0], 'app', 'views', 'shared', '_form.html.erb')
+          partialPath = path.join(atom.project.getPaths()[0], 'lib', 'views', 'shared', '_form.html.erb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe partialPath
@@ -542,7 +542,7 @@ describe "RailsTransporter", ->
       it "opens partial template", ->
         editor = atom.workspace.getActiveTextEditor()
         editor.setCursorBufferPosition new Point(6, 0)
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-partial-template'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-partial-template'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -550,7 +550,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          partialPath = path.join(atom.project.getPaths()[0], 'app', 'views', 'blogs', '_form02.html.erb')
+          partialPath = path.join(atom.project.getPaths()[0], 'lib', 'views', 'blogs', '_form02.html.erb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe partialPath
@@ -560,7 +560,7 @@ describe "RailsTransporter", ->
       it "opens partial template", ->
         editor = atom.workspace.getActiveTextEditor()
         editor.setCursorBufferPosition new Point(7, 0)
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-partial-template'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-partial-template'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -568,7 +568,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          partialPath = path.join(atom.project.getPaths()[0], 'app', 'views', 'blogs', '_form02.html.erb')
+          partialPath = path.join(atom.project.getPaths()[0], 'lib', 'views', 'blogs', '_form02.html.erb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe partialPath
@@ -578,7 +578,7 @@ describe "RailsTransporter", ->
       it "opens partial template", ->
         editor = atom.workspace.getActiveTextEditor()
         editor.setCursorBufferPosition new Point(8, 0)
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-partial-template'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-partial-template'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -586,7 +586,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          partialPath = path.join(atom.project.getPaths()[0], 'app', 'views', 'blogs', '_form02.html.erb')
+          partialPath = path.join(atom.project.getPaths()[0], 'lib', 'views', 'blogs', '_form02.html.erb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe partialPath
@@ -596,7 +596,7 @@ describe "RailsTransporter", ->
       it "opens partial template", ->
         editor = atom.workspace.getActiveTextEditor()
         editor.setCursorBufferPosition new Point(9, 0)
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-partial-template'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-partial-template'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -604,7 +604,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          partialPath = path.join(atom.project.getPaths()[0], 'app', 'views', 'blogs', '_form02.html.erb')
+          partialPath = path.join(atom.project.getPaths()[0], 'lib', 'views', 'blogs', '_form02.html.erb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe partialPath
@@ -614,12 +614,12 @@ describe "RailsTransporter", ->
     describe "when cursor's current buffer row contains layout method", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'controllers', 'blogs_controller.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'controller', 'blogs_controller.rb'))
 
       it "opens specified layout", ->
         editor = atom.workspace.getActiveTextEditor()
         editor.setCursorBufferPosition new Point(2, 0)
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-layout'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-layout'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -627,7 +627,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          partialPath = path.join(atom.project.getPaths()[0], 'app', 'views', 'layouts', 'special.html.erb')
+          partialPath = path.join(atom.project.getPaths()[0], 'lib', 'views', 'layouts', 'special.html.erb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(3, 0)
           expect(editor.getPath()).toBe partialPath
@@ -636,11 +636,11 @@ describe "RailsTransporter", ->
     describe "when same base name as the controller exists", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'controllers', 'top_controller.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'controller', 'top_controller.rb'))
 
       it "opens layout that same base name as the controller", ->
         editor = atom.workspace.getActiveTextEditor()
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-layout'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-layout'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -648,7 +648,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          partialPath = path.join(atom.project.getPaths()[0], 'app', 'views', 'layouts', 'top.html.erb')
+          partialPath = path.join(atom.project.getPaths()[0], 'lib', 'views', 'layouts', 'top.html.erb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(3, 0)
           expect(editor.getPath()).toBe partialPath
@@ -657,11 +657,11 @@ describe "RailsTransporter", ->
     describe "when there is no such controller-specific layout", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'controllers', 'main_controller.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'controller', 'main_controller.rb'))
 
       it "opens default layout named 'application'", ->
         editor = atom.workspace.getActiveTextEditor()
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-layout'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-layout'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -669,7 +669,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          partialPath = path.join(atom.project.getPaths()[0], 'app', 'views', 'layouts', 'application.html.erb')
+          partialPath = path.join(atom.project.getPaths()[0], 'lib', 'views', 'layouts', 'application.html.erb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(3, 0)
           expect(editor.getPath()).toBe partialPath
@@ -680,17 +680,17 @@ describe "RailsTransporter", ->
     describe "when active editor opens controller", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'controllers', 'blogs_controller.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'controller', 'blogs_controller.rb'))
 
       it "opens controller spec", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-spec'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-spec'
 
         waitsFor ->
           activationPromise
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          specPath = path.join(atom.project.getPaths()[0], 'spec', 'controllers', 'blogs_controller_spec.rb')
+          specPath = path.join(atom.project.getPaths()[0], 'spec', 'controller', 'blogs_controller_spec.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(20, 0)
           expect(editor.getPath()).toBe specPath
@@ -699,10 +699,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens model", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'models', 'blog.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb'))
 
       it "opens model spec", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-spec'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-spec'
 
         waitsFor ->
           activationPromise
@@ -721,7 +721,7 @@ describe "RailsTransporter", ->
           atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'factories', 'blogs.rb'))
 
       it "opens model spec", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-spec'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-spec'
 
         waitsFor ->
           activationPromise
@@ -737,10 +737,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens helper", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'helpers', 'blogs_helper.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'helpers', 'blogs_helper.rb'))
 
       it "opens helper spec", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-spec'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-spec'
 
         waitsFor ->
           activationPromise
@@ -756,10 +756,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens service object", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'services', 'blog_post_analytics.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'services', 'blog_post_analytics.rb'))
 
       it "opens service object spec", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-spec'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-spec'
 
         waitsFor ->
           activationPromise
@@ -775,10 +775,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens worker object", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'workers', 'blog_post_analytics_worker.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'workers', 'blog_post_analytics_worker.rb'))
 
       it "opens worker object spec", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-spec'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-spec'
 
         waitsFor ->
           activationPromise
@@ -795,17 +795,17 @@ describe "RailsTransporter", ->
     describe "when active editor opens controller", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'controllers', 'blogs_controller.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'controller', 'blogs_controller.rb'))
 
       it "opens controller test", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-test'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-test'
 
         waitsFor ->
           activationPromise
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          testPath = path.join(atom.project.getPaths()[0], 'test', 'controllers', 'blogs_controller_test.rb')
+          testPath = path.join(atom.project.getPaths()[0], 'test', 'controller', 'blogs_controller_test.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(2, 0)
           expect(editor.getPath()).toBe testPath
@@ -814,10 +814,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens model", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'models', 'blog.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb'))
 
       it "opens model test", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-test'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-test'
 
         waitsFor ->
           activationPromise
@@ -833,10 +833,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens helper", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'helpers', 'blogs_helper.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'helpers', 'blogs_helper.rb'))
 
       it "opens helper test", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-test'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-test'
 
         waitsFor ->
           activationPromise
@@ -852,10 +852,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens service object", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'services', 'blog_post_analytics.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'services', 'blog_post_analytics.rb'))
 
       it "opens service object test", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-test'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-test'
 
         waitsFor ->
           activationPromise
@@ -871,10 +871,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens worker object", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'workers', 'blog_post_analytics_worker.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'workers', 'blog_post_analytics_worker.rb'))
 
       it "opens service object test", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-test'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-test'
 
         waitsFor ->
           activationPromise
@@ -891,21 +891,21 @@ describe "RailsTransporter", ->
     describe "when active editor opens view", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'views', 'layouts', 'application.html.erb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'views', 'layouts', 'application.html.erb'))
 
       describe "when cursor's current buffer row contains stylesheet_link_tag", ->
         describe "enclosed in parentheses", ->
           it "opens stylesheet", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(10, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'stylesheets', 'application.css')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'stylesheets', 'application.css')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(10, 0)
               expect(editor.getPath()).toBe assetPath
@@ -915,14 +915,14 @@ describe "RailsTransporter", ->
           it "opens stylesheet", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(11, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'stylesheets', 'application.css')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'stylesheets', 'application.css')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(11, 0)
               expect(editor.getPath()).toBe assetPath
@@ -932,14 +932,14 @@ describe "RailsTransporter", ->
           it "opens stylesheet", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(12, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'stylesheets', 'application02', 'common.css')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'stylesheets', 'application02', 'common.css')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(1, 0)
               expect(editor.getPath()).toBe assetPath
@@ -949,7 +949,7 @@ describe "RailsTransporter", ->
           it "opens stylesheet in vendor directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(13, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
@@ -966,7 +966,7 @@ describe "RailsTransporter", ->
           it "opens stylesheet in lib directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(16, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
@@ -983,7 +983,7 @@ describe "RailsTransporter", ->
           it "opens stylesheet in public directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(14, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
@@ -1001,14 +1001,14 @@ describe "RailsTransporter", ->
           it "opens javascript", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(5, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'javascripts', 'application01.js')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'javascripts', 'application01.js')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(12, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1018,14 +1018,14 @@ describe "RailsTransporter", ->
           it "opens javascript", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(6, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'javascripts', 'application01.js')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'javascripts', 'application01.js')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(12, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1035,14 +1035,14 @@ describe "RailsTransporter", ->
           it "opens javascript in another directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(7, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'javascripts', 'application02', 'common.js')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'javascripts', 'application02', 'common.js')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(0, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1052,7 +1052,7 @@ describe "RailsTransporter", ->
           it "opens javascript in vendor directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(8, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
@@ -1069,7 +1069,7 @@ describe "RailsTransporter", ->
           it "opens javascript in lib directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(15, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
@@ -1086,7 +1086,7 @@ describe "RailsTransporter", ->
           it "opens javascript in public directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(9, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
@@ -1103,14 +1103,14 @@ describe "RailsTransporter", ->
           it "opens .erb javascript", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(17, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'javascripts', 'dynamic_script.js.coffee.erb')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'javascripts', 'dynamic_script.js.coffee.erb')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(0, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1119,7 +1119,7 @@ describe "RailsTransporter", ->
     describe "when active editor opens javascript manifest", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'assets', 'javascripts', 'application01.js'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'assets', 'javascripts', 'application01.js'))
 
       describe "cursor's current buffer row contains require_tree", ->
         beforeEach ->
@@ -1131,7 +1131,7 @@ describe "RailsTransporter", ->
         #
         #   # This is an activation event, triggering it will cause the package to be
         #   # activated.
-        #   atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+        #   atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
         #
         #   # Waits until package is activated
         #   waitsForPromise ->
@@ -1139,18 +1139,18 @@ describe "RailsTransporter", ->
         #
         #   runs ->
         #     expect(workspaceElement.querySelector('.select-list')).toExist()
-        #     atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+        #     atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
         #     expect(workspaceElement.querySelector('.select-list')).not.toExist()
 
         it "shows file paths in required directory and its subdirectories and selects the first", ->
-          atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+          atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
           # Waits until package is activated
           waitsForPromise ->
             activationPromise
 
           runs ->
-            requireDir = path.join(atom.project.getPaths()[0], 'app', 'assets', 'javascripts', 'shared')
+            requireDir = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'javascripts', 'shared')
             expect(workspaceElement.querySelectorAll('.select-list li').length).toBe fs.readdirSync(requireDir).length
             # file be located directly below
             expect($(workspaceElement).find(".select-list .primary-line:contains(common.js.coffee)")).toExist()
@@ -1161,7 +1161,7 @@ describe "RailsTransporter", ->
 
             expect($(workspaceElement).find(".select-list li:first")).toHaveClass 'two-lines selected'
             # hide finder
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
       describe "cursor's current buffer row contains require_directory", ->
         beforeEach ->
@@ -1173,7 +1173,7 @@ describe "RailsTransporter", ->
         #
         #   # This is an activation event, triggering it will cause the package to be
         #   # activated.
-        #   atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+        #   atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
         #
         #   # Waits until package is activated
         #   waitsForPromise ->
@@ -1181,18 +1181,18 @@ describe "RailsTransporter", ->
         #
         #   runs ->
         #     expect(workspaceElement.querySelector('.select-list')).toExist()
-        #     atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+        #     atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
         #     expect(workspaceElement.querySelector('.select-list')).not.toExist()
 
         # it "shows file paths in required directory and selects the first", ->
-        #   atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+        #   atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
         #
         #   # Waits until package is activated
         #   waitsForPromise ->
         #     activationPromise
         #
         #   runs ->
-        #     requireDir = path.join(atom.project.getPaths()[0], 'app', 'assets', 'javascripts', 'shared')
+        #     requireDir = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'javascripts', 'shared')
         #     filesInDirectory = (file for file in fs.readdirSync(requireDir) when fs.lstatSync(path.join(requireDir, file)).isFile())
         #
         #     expect(workspaceElement.querySelectorAll('.select-list li').length).toBe filesInDirectory.length
@@ -1209,14 +1209,14 @@ describe "RailsTransporter", ->
           it "opens coffeescript", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(22, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'javascripts', 'blogs.js.coffee')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'javascripts', 'blogs.js.coffee')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(0, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1226,14 +1226,14 @@ describe "RailsTransporter", ->
           it "opens coffeescript", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(23, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'javascripts', 'blogs.js.coffee')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'javascripts', 'blogs.js.coffee')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(0, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1243,14 +1243,14 @@ describe "RailsTransporter", ->
           it "opens coffeescript", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(16, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'javascripts', 'blogs.js.coffee')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'javascripts', 'blogs.js.coffee')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(0, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1260,14 +1260,14 @@ describe "RailsTransporter", ->
           it "opens javascript", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(17, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'javascripts', 'pure-js-blogs.js')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'javascripts', 'pure-js-blogs.js')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(0, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1277,14 +1277,14 @@ describe "RailsTransporter", ->
           it "opens coffeescript in another directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(18, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'javascripts', 'shared', 'common.js.coffee')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'javascripts', 'shared', 'common.js.coffee')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(0, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1294,14 +1294,14 @@ describe "RailsTransporter", ->
           it "opens javascript in another directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(19, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'javascripts', 'shared', 'pure-js-common.js')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'javascripts', 'shared', 'pure-js-common.js')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(0, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1311,7 +1311,7 @@ describe "RailsTransporter", ->
           it "opens javascript in lib directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(20, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
@@ -1328,7 +1328,7 @@ describe "RailsTransporter", ->
           it "opens javascript in vendor directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(21, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
@@ -1344,21 +1344,21 @@ describe "RailsTransporter", ->
     describe "when active editor opens stylesheet manifest", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'assets', 'stylesheets', 'application.css'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'assets', 'stylesheets', 'application.css'))
 
       describe "when cursor's current buffer row contains 'require'", ->
         describe "when it requires scss with .css suffix", ->
           it "opens scss", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(12, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'stylesheets', 'blogs.css.scss')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'stylesheets', 'blogs.css.scss')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(0, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1368,14 +1368,14 @@ describe "RailsTransporter", ->
           it "opens scss", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(13, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'stylesheets', 'blogs.css.scss')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'stylesheets', 'blogs.css.scss')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(0, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1385,14 +1385,14 @@ describe "RailsTransporter", ->
           it "opens css", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(14, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'stylesheets', 'pure-css-blogs.css')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'stylesheets', 'pure-css-blogs.css')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(0, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1402,14 +1402,14 @@ describe "RailsTransporter", ->
           it "opens scss", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(15, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'stylesheets', 'blogs.css.scss')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'stylesheets', 'blogs.css.scss')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(0, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1419,14 +1419,14 @@ describe "RailsTransporter", ->
           it "opens scss in another directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(16, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'stylesheets', 'shared', 'pure-css-common.css')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'stylesheets', 'shared', 'pure-css-common.css')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(0, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1436,14 +1436,14 @@ describe "RailsTransporter", ->
           it "opens css in another directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(17, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
               atom.workspace.getActivePane().getItems().length == 2
 
             runs ->
-              assetPath = path.join(atom.project.getPaths()[0], 'app', 'assets', 'stylesheets', 'shared', 'common.css.scss')
+              assetPath = path.join(atom.project.getPaths()[0], 'lib', 'assets', 'stylesheets', 'shared', 'common.css.scss')
               editor = atom.workspace.getActiveTextEditor()
               editor.setCursorBufferPosition new Point(0, 0)
               expect(editor.getPath()).toBe assetPath
@@ -1453,7 +1453,7 @@ describe "RailsTransporter", ->
           it "opens scss in lib directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(18, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
@@ -1470,7 +1470,7 @@ describe "RailsTransporter", ->
           it "opens css in lib directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(19, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
@@ -1487,7 +1487,7 @@ describe "RailsTransporter", ->
           it "opens scss in vendor directory", ->
             editor = atom.workspace.getActiveTextEditor()
             editor.setCursorBufferPosition new Point(20, 0)
-            atom.commands.dispatch workspaceElement, 'rails-transporter:open-asset'
+            atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-asset'
 
             waitsFor ->
               activationPromise
@@ -1504,12 +1504,12 @@ describe "RailsTransporter", ->
     describe "when active editor opens controller and cursor is on include method", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'controllers', 'blogs_controller.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'controller', 'blogs_controller.rb'))
 
       it "opens model concern", ->
         editor = atom.workspace.getActiveTextEditor()
         editor.setCursorBufferPosition new Point(3, 0)
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-controller'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-controller'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -1517,7 +1517,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          concernPath = path.join(atom.project.getPaths()[0], 'app', 'controllers', 'concerns', 'blog', 'taggable.rb')
+          concernPath = path.join(atom.project.getPaths()[0], 'lib', 'controller', 'concerns', 'blog', 'taggable.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe concernPath
@@ -1529,7 +1529,7 @@ describe "RailsTransporter", ->
           atom.workspace.open(path.join(atom.project.getPaths()[0], 'app/models/blog.rb'))
 
       it "opens related controller", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-controller'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-controller'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -1537,7 +1537,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'app', 'controllers', 'blogs_controller.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'controller', 'blogs_controller.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -1546,10 +1546,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens controller test", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'test', 'controllers', 'blogs_controller_test.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'test', 'controller', 'blogs_controller_test.rb'))
 
       it "opens related controller", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-controller'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-controller'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -1557,7 +1557,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'app', 'controllers', 'blogs_controller.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'controller', 'blogs_controller.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -1566,10 +1566,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens controller spec", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'controllers', 'blogs_controller_spec.rb'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'controller', 'blogs_controller_spec.rb'))
 
       it "opens related controller", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-controller'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-controller'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -1577,7 +1577,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'app', 'controllers', 'blogs_controller.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'controller', 'blogs_controller.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -1589,7 +1589,7 @@ describe "RailsTransporter", ->
           atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'requests', 'blogs_spec.rb'))
 
       it "opens related controller", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-controller'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-controller'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -1597,7 +1597,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'app', 'controllers', 'blogs_controller.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'controller', 'blogs_controller.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -1606,10 +1606,10 @@ describe "RailsTransporter", ->
     describe "when active editor opens view", ->
       beforeEach ->
         waitsForPromise ->
-          atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'views', 'blogs', 'show.html.haml'))
+          atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'views', 'blogs', 'show.html.haml'))
 
       it "opens related controller", ->
-        atom.commands.dispatch workspaceElement, 'rails-transporter:open-controller'
+        atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-controller'
 
         # Waits until package is activated and active panes count is 2
         waitsFor ->
@@ -1617,7 +1617,7 @@ describe "RailsTransporter", ->
           atom.workspace.getActivePane().getItems().length == 2
 
         runs ->
-          modelPath = path.join(atom.project.getPaths()[0], 'app', 'controllers', 'blogs_controller.rb')
+          modelPath = path.join(atom.project.getPaths()[0], 'lib', 'controller', 'blogs_controller.rb')
           editor = atom.workspace.getActiveTextEditor()
           editor.setCursorBufferPosition new Point(0, 0)
           expect(editor.getPath()).toBe modelPath
@@ -1628,10 +1628,10 @@ describe "RailsTransporter", ->
       describe "open plural resource filename", ->
         beforeEach ->
           waitsForPromise ->
-            atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'models', 'blog.rb'))
+            atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'models', 'blog.rb'))
 
         it "opens related factory", ->
-          atom.commands.dispatch workspaceElement, 'rails-transporter:open-factory'
+          atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-factory'
 
           # Waits until package is activated and active panes count is 2
           waitsFor ->
@@ -1648,10 +1648,10 @@ describe "RailsTransporter", ->
       describe "open singular resource filename", ->
         beforeEach ->
           waitsForPromise ->
-            atom.workspace.open(path.join(atom.project.getPaths()[0], 'app', 'models', 'entry.rb'))
+            atom.workspace.open(path.join(atom.project.getPaths()[0], 'lib', 'models', 'entry.rb'))
 
         it "opens related factory", ->
-          atom.commands.dispatch workspaceElement, 'rails-transporter:open-factory'
+          atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-factory'
 
           # Waits until package is activated and active panes count is 2
           waitsFor ->
@@ -1673,7 +1673,7 @@ describe "RailsTransporter", ->
             atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'models', 'blog_spec.rb'))
 
         it "opens related factory", ->
-          atom.commands.dispatch workspaceElement, 'rails-transporter:open-factory'
+          atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-factory'
 
           # Waits until package is activated and active panes count is 2
           waitsFor ->
@@ -1693,7 +1693,7 @@ describe "RailsTransporter", ->
             atom.workspace.open(path.join(atom.project.getPaths()[0], 'spec', 'models', 'entry_spec.rb'))
 
         it "opens related factory", ->
-          atom.commands.dispatch workspaceElement, 'rails-transporter:open-factory'
+          atom.commands.dispatch workspaceElement, 'sinatra-transporter:open-factory'
 
           # Waits until package is activated and active panes count is 2
           waitsFor ->

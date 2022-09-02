@@ -4,12 +4,12 @@ module.exports =
 class RailsUtil
   isController: (filePath) ->
     filePath? and
-    atom.project.relativize(filePath).indexOf(path.join('app', 'controllers')) isnt -1 and
+    atom.project.relativize(filePath).indexOf(path.join('lib', 'controller')) isnt -1 and
     filePath.search(/_controller\.rb$/) isnt -1
 
   isView: (filePath) ->
     filePath? and
-    atom.project.relativize(filePath).indexOf(path.join('app', 'views')) isnt -1
+    atom.project.relativize(filePath).indexOf(path.join('lib', 'views')) isnt -1
 
   isTest: (filePath) ->
     filePath? and
@@ -23,21 +23,21 @@ class RailsUtil
 
   isHelper: (filePath) ->
     filePath? and
-    atom.project.relativize(filePath).indexOf(path.join('app', 'helpers')) isnt -1 and
+    atom.project.relativize(filePath).indexOf(path.join('lib', 'helpers')) isnt -1 and
     filePath.search(/_helper\.rb$/) isnt -1
 
   isModel: (filePath) ->
     filePath? and
-    atom.project.relativize(filePath).indexOf(path.join('app', 'models')) isnt -1 and
+    atom.project.relativize(filePath).indexOf(path.join('lib', 'models')) isnt -1 and
     filePath.search(/\.rb$/) isnt -1
 
   isAsset: (filePath) ->
     filePath? and
-    atom.project.relativize(filePath).indexOf(path.join('app', 'assets')) isnt -1
+    atom.project.relativize(filePath).indexOf(path.join('lib', 'assets')) isnt -1
 
   isMailer: (filePath) ->
     filePath? and
-    atom.project.relativize(filePath).indexOf(path.join('app', 'mailers')) isnt -1 and
+    atom.project.relativize(filePath).indexOf(path.join('lib', 'mailers')) isnt -1 and
     filePath.search(/_mailer\.rb$/) isnt -1
 
   isFactory: (filePath) ->
@@ -47,5 +47,5 @@ class RailsUtil
 
   isService: (filePath) ->
     filePath? and
-    atom.project.relativize(filePath).search(RegExp(path.join('app', '\\w+'))) isnt -1 and
+    atom.project.relativize(filePath).search(RegExp(path.join('lib', '\\w+'))) isnt -1 and
     filePath.search(/\.rb$/) isnt -1

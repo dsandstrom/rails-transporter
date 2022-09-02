@@ -14,7 +14,7 @@ class ViewFinderView extends BaseFinderView
     @displayFiles.length = 0
     currentFile = atom.workspace.getActiveTextEditor().getPath()
     if @isController(currentFile)
-      viewDir = currentFile.replace('controllers', 'views')
+      viewDir = currentFile.replace('controller', 'views')
                            .replace(/_controller\.rb$/, '')
     else if @isModel(currentFile)
       basename = path.basename(currentFile, '.rb')
